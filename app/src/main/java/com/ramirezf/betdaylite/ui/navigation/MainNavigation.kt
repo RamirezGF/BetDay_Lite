@@ -10,10 +10,14 @@ import com.ramirezf.betdaylite.presentation.detail.BetDetailScreen
 import com.ramirezf.betdaylite.presentation.home.HomeScreen
 import com.ramirezf.betdaylite.presentation.home.HomeViewModel
 import com.ramirezf.betdaylite.presentation.profile.ProfileScreen
+import com.ramirezf.betdaylite.presentation.profile.ProfileViewModel
 import com.ramirezf.betdaylite.ui.navigation.screen.Screen
 
 @Composable
-fun MainNavigation(homeViewModel: HomeViewModel) {
+fun MainNavigation(
+    homeViewModel: HomeViewModel,
+    profileViewModel: ProfileViewModel
+) {
     val navController = rememberNavController()
 
     NavHost(
@@ -37,6 +41,8 @@ fun MainNavigation(homeViewModel: HomeViewModel) {
 
         composable(Screen.Profile.route) {
             ProfileScreen(
+                viewModel = profileViewModel, // 👈 CLAVE
+                onBack = { navController.popBackStack() },
                 onBetClick = { betId ->
                     navController.navigate(
                         Screen.BetDetail.createRoute(betId)
@@ -48,7 +54,7 @@ fun MainNavigation(homeViewModel: HomeViewModel) {
         composable(
             Screen.BetDetail.route,
             arguments = listOf(navArgument("betId") {
-                type = NavType.StringType // ✅ FIX
+                type = NavType.StringType
             })
         ) {
             val betId = it.arguments?.getString("betId") ?: ""

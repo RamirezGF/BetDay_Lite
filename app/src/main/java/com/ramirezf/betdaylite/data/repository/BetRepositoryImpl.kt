@@ -24,12 +24,19 @@ class BetRepositoryImpl(
         _bets.value = emptyList()
     }
 
-    fun placeBet(match: Match, pick: Pick) {
+    fun placeBet(match: Match, pick: Pick): String {
+
         val odd = when (pick) {
             Pick.HOME -> match.market.odds.home
             Pick.DRAW -> match.market.odds.draw
             Pick.AWAY -> match.market.odds.away
         }
+
+        val status = listOf(
+            BetStatus.WON,
+            BetStatus.LOST,
+            BetStatus.PENDING
+        ).random()
 
         val newBet = Bet(
             id = UUID.randomUUID().toString(),
@@ -37,9 +44,11 @@ class BetRepositoryImpl(
             pick = pick,
             odd = odd,
             stake = 10.0,
-            status = BetStatus.PENDING
+            status = status
         )
 
         _bets.value = _bets.value + newBet
+
+        return newBet.id
     }
 }

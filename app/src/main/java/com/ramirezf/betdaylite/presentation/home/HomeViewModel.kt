@@ -19,7 +19,7 @@ class HomeViewModel(
         repository.loadInitialData()
     }
 
-    fun onBetClick(match: Match, pick: Pick) {
-        placeBet(match, pick)
+    fun onBetClick(match: Match, pick: Pick): String {
+        return placeBet(match, pick)
     }
 }

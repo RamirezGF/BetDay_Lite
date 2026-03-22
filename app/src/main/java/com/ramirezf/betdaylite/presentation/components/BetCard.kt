@@ -29,32 +29,21 @@ fun BetCard(bet: Bet,onClick: () -> Unit) {
     ) {
 
         Column(modifier = Modifier.padding(16.dp)) {
-
-            // 🔹 Equipos (si luego quieres mapear match → mejor aún)
             Text(
                 text = "Match ID: ${bet.matchId}",
                 style = MaterialTheme.typography.labelMedium
             )
-
             Spacer(modifier = Modifier.height(6.dp))
-
-            // 🔹 Selección
             Text(
                 text = "Pick: ${bet.pick}",
                 style = MaterialTheme.typography.titleMedium
             )
-
             Spacer(modifier = Modifier.height(6.dp))
-
-            // 🔹 Cuota
             Text(
                 text = "Cuota: ${bet.odd}",
                 style = MaterialTheme.typography.bodyMedium
             )
-
             Spacer(modifier = Modifier.height(6.dp))
-
-            // 🔹 Estado
             Text(
                 text = "Estado: ${bet.status}",
                 color = getStatusColor(bet.status),
@@ -66,8 +55,8 @@ fun BetCard(bet: Bet,onClick: () -> Unit) {
 
 fun getStatusColor(status: BetStatus): Color {
     return when (status) {
-        BetStatus.PENDING -> Color.Gray
-        BetStatus.WON -> Color(0xFF2E7D32)   // Verde
-        BetStatus.LOST -> Color(0xFFC62828)  // Rojo
+        BetStatus.PENDING -> Color(0xFFFFE600)
+        BetStatus.WON -> Color(0xFF25FF2F)
+        BetStatus.LOST -> Color(0xFFFF0000)
     }
 }
