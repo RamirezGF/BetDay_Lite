@@ -16,21 +16,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ramirezf.betdaylite.domain.model.Bet
 import com.ramirezf.betdaylite.domain.model.BetStatus
+import com.ramirezf.betdaylite.domain.model.Match
 
 @Composable
-fun BetCard(bet: Bet,onClick: () -> Unit) {
+fun BetCard(bet: Bet, match: Match, onClick: () -> Unit) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick()}
-            .padding(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            .padding(10.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 7.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+            contentColor = Color.Black
+        )
     ) {
 
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "Match ID: ${bet.matchId}",
+                text = "Liga: ${match.league.name}",
+                style = MaterialTheme.typography.labelMedium
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Equipos: ${match.homeTeam.name} vs ${match.awayTeam.name}",
                 style = MaterialTheme.typography.labelMedium
             )
             Spacer(modifier = Modifier.height(6.dp))
@@ -47,7 +57,7 @@ fun BetCard(bet: Bet,onClick: () -> Unit) {
             Text(
                 text = "Estado: ${bet.status}",
                 color = getStatusColor(bet.status),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyLarge
             )
         }
     }
@@ -55,8 +65,8 @@ fun BetCard(bet: Bet,onClick: () -> Unit) {
 
 fun getStatusColor(status: BetStatus): Color {
     return when (status) {
-        BetStatus.PENDING -> Color(0xFFFFE600)
-        BetStatus.WON -> Color(0xFF25FF2F)
+        BetStatus.PENDING -> Color(0xFFD3BF01)
+        BetStatus.WON -> Color(0xFF00D70B)
         BetStatus.LOST -> Color(0xFFFF0000)
     }
 }

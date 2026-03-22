@@ -1,5 +1,7 @@
 package com.ramirezf.betdaylite.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -13,6 +15,7 @@ import com.ramirezf.betdaylite.presentation.profile.ProfileScreen
 import com.ramirezf.betdaylite.presentation.profile.ProfileViewModel
 import com.ramirezf.betdaylite.ui.navigation.screen.Screen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainNavigation(
     homeViewModel: HomeViewModel,
@@ -30,11 +33,6 @@ fun MainNavigation(
                 viewModel = homeViewModel,
                 onGoToProfile = {
                     navController.navigate(Screen.Profile.route)
-                },
-                onBetClick = { betId ->
-                    navController.navigate(
-                        Screen.BetDetail.createRoute(betId)
-                    )
                 }
             )
         }
@@ -56,9 +54,16 @@ fun MainNavigation(
             arguments = listOf(navArgument("betId") {
                 type = NavType.StringType
             })
-        ) {
-            val betId = it.arguments?.getString("betId") ?: ""
-            BetDetailScreen(betId)
+        ) { backStackEntry ->
+            val betId = backStackEntry.arguments?.getString("betId") ?: ""
+
+            // Ahora pasamos ambos parámetros requeridos
+            BetDetailScreen(
+                betId = betId,
+                onBack = {
+                    navController.popBackStack() // Esto te devolverá a ProfileScreen
+                }
+            )
         }
     }
 }

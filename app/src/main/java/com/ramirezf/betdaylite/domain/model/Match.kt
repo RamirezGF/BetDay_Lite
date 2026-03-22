@@ -19,7 +19,8 @@ data class Team(
 )
 
 data class Market(
-    val odds: Odds
+    val odds: Odds,
+    val type: String
 )
 
 data class Odds(

@@ -1,5 +1,7 @@
 package com.ramirezf.betdaylite.presentation.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -8,7 +10,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -21,15 +22,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import com.ramirezf.betdaylite.presentation.components.MatchCard
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel,
     onGoToProfile: () -> Unit,
-    onBetClick: (String) -> Unit
+    viewModel: HomeViewModel
 ) {
     val matches by viewModel.matches.collectAsState()
-
+    val bets by viewModel.bets.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -58,17 +59,23 @@ fun HomeScreen(
             contentPadding = padding
         ) {
             items(matches) { match ->
+                val userBet = bets.find { it.matchId == match.id }
+                val hasBet = userBet != null
                 MatchCard(
                     match = match,
+                    isAlreadyBet = hasBet,
+                    selectedPick = userBet?.pick,
                     onPick = { pick ->
-                        val betId = viewModel.onBetClick(match, pick)
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = "Apuesta realizada ✅",
-                                duration = SnackbarDuration.Long
-                            )
+                        if (hasBet) {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Usted ya apostó en este juego")
+                            }
+                        } else {
+                            viewModel.onBetClick(match, pick)
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Apuesta realizada a ${pick.name} con éxito ✅")
+                            }
                         }
-                        onBetClick(betId)
                     }
                 )
             }

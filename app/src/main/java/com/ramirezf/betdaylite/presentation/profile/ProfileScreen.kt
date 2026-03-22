@@ -29,6 +29,8 @@ fun ProfileScreen(
 ) {
 
     val bets by viewModel.bets.collectAsState()
+    val matches by viewModel.matches.collectAsState()
+
 
     Scaffold(
         topBar = {
@@ -60,12 +62,16 @@ fun ProfileScreen(
                 contentPadding = padding
             ) {
                 items(bets) { bet ->
-                    BetCard(
-                        bet = bet,
-                        onClick = {
-                            onBetClick(bet.id)
-                        }
-                    )
+                    val match = matches.find { it.id == bet.matchId }
+                    match?.let {
+                        BetCard(
+                            bet = bet,
+                            match = it,
+                            onClick = {
+                                onBetClick(bet.id)
+                            }
+                        )
+                    }
                 }
             }
         }

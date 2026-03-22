@@ -1,23 +1,20 @@
 package com.ramirezf.betdaylite.presentation.detail
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.ramirezf.betdaylite.data.repository.BetRepositoryImpl
-import com.ramirezf.betdaylite.data.repository.BetRepositoryProvider
 import com.ramirezf.betdaylite.domain.model.Bet
+import com.ramirezf.betdaylite.domain.model.Match
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.combine
 
 class BetDetailViewModel(
     private val repository: BetRepositoryImpl
 ) : ViewModel() {
-
-    fun getBetById(betId: String): Flow<Bet?> {
-        return repository.bets.map { list ->
-            list.find { it.id == betId }
+    fun getBetDetail(betId: String): Flow<Pair<Bet, Match>?> {
+        return combine(repository.bets, repository.matches) { bets, matches ->
+            val bet = bets.find { it.id == betId }
+            val match = matches.find { it.id == bet?.matchId }
+            if (bet != null && match != null) Pair(bet, match) else null
         }
     }
 }
