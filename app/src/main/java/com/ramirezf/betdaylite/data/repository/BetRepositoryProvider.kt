@@ -1,15 +1,19 @@
 package com.ramirezf.betdaylite.data.repository
 
 import android.content.Context
+import com.ramirezf.betdaylite.data.local.AppDatabase
 import com.ramirezf.betdaylite.data.local.JsonReader
 
 object BetRepositoryProvider {
 
-    private var repository: BetRepositoryImpl? = null
+    @Volatile private var repository: BetRepositoryImpl? = null
 
     fun provide(context: Context): BetRepositoryImpl {
-        return repository ?: BetRepositoryImpl(JsonReader(context)).also {
-            repository = it
+        return repository ?: synchronized(this) {
+            BetRepositoryImpl(
+                jsonReader = JsonReader(context),
+                db = AppDatabase.getInstance(context)
+            ).also { repository = it }
         }
     }
 }

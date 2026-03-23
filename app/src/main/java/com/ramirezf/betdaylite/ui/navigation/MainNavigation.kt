@@ -39,7 +39,7 @@ fun MainNavigation(
 
         composable(Screen.Profile.route) {
             ProfileScreen(
-                viewModel = profileViewModel, // 👈 CLAVE
+                viewModel = profileViewModel,
                 onBack = { navController.popBackStack() },
                 onBetClick = { betId ->
                     navController.navigate(
@@ -56,12 +56,10 @@ fun MainNavigation(
             })
         ) { backStackEntry ->
             val betId = backStackEntry.arguments?.getString("betId") ?: ""
-
-            // Ahora pasamos ambos parámetros requeridos
             BetDetailScreen(
                 betId = betId,
                 onBack = {
-                    navController.popBackStack() // Esto te devolverá a ProfileScreen
+                    navController.popBackStack()
                 }
             )
         }

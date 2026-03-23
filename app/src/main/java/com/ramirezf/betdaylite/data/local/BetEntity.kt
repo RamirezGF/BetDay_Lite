@@ -1,17 +1,18 @@
-package com.ramirezf.betdaylite.data.remote
+package com.ramirezf.betdaylite.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "bets")
 data class BetEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-
+    @PrimaryKey
+    val id: String,
     val matchId: String,
     val homeTeam: String,
     val awayTeam: String,
-    val selection: String,
+    val pick: String,
     val odd: Double,
-    val status: String
+    val stake: Double,
+    val status: String,
+    val placedAt: Long = System.currentTimeMillis()
 )

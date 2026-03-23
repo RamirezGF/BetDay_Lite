@@ -19,6 +19,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.sp
+import com.ramirezf.betdaylite.domain.model.Pick
 import com.ramirezf.betdaylite.presentation.components.MatchCard
 import kotlinx.coroutines.launch
 
@@ -35,13 +42,32 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
 
     Scaffold(
+        containerColor = Color.White,
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
         topBar = {
             TopAppBar(
                 title = {
-                    Text("BetDay Lite")
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(
+                                color = Color(0xFFD32F2F),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                            ) {
+                                append("BetDay ")
+                            }
+                            withStyle(style = SpanStyle(
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )) {
+                                append("Lite")
+                            }
+                        }
+                    )
                 },
                 actions = {
                     IconButton(onClick = onGoToProfile) {
@@ -64,16 +90,17 @@ fun HomeScreen(
                 MatchCard(
                     match = match,
                     isAlreadyBet = hasBet,
-                    selectedPick = userBet?.pick,
+                    selectedPick = userBet?.pick?.let { Pick.valueOf(it) },
                     onPick = { pick ->
                         if (hasBet) {
                             scope.launch {
                                 snackbarHostState.showSnackbar("Usted ya apostó en este juego")
                             }
                         } else {
-                            viewModel.onBetClick(match, pick)
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Apuesta realizada a ${pick.name} con éxito ✅")
+                            viewModel.onBetClick(match, pick) { result ->
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(result)
+                                }
                             }
                         }
                     }

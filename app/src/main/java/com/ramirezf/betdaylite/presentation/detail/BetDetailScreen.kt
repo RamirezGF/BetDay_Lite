@@ -38,9 +38,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ramirezf.betdaylite.data.repository.BetRepositoryProvider
 import com.ramirezf.betdaylite.domain.model.Match
 import java.time.OffsetDateTime
@@ -58,9 +62,30 @@ fun BetDetailScreen(betId: String, onBack: () -> Unit) {
     val detail by viewModel.getBetDetail(betId).collectAsState(initial = null)
 
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
-                title = { Text("Detalle de Apuesta") },
+                title = {
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(
+                                color = Color(0xFFD32F2F),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                            ) {
+                                append("Detalle d")
+                            }
+                            withStyle(style = SpanStyle(
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )) {
+                                append("e Apuestas")
+                            }
+                        }
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver")
@@ -76,7 +101,6 @@ fun BetDetailScreen(betId: String, onBack: () -> Unit) {
                     .padding(16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                // Sección: Info del Evento
                 Text("EVENTO", style = MaterialTheme.typography.labelLarge, color = Color.Gray)
                 Card(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
@@ -111,13 +135,10 @@ fun BetDetailScreen(betId: String, onBack: () -> Unit) {
                         DetailRow("Monto Apostado", "S/ ${bet.stake}")
                         DetailRow(
                             label = "Retorno Potencial",
-                            value = "S/ ${bet.stake * bet.odd}",
+                            value = "S/ ${"%.2f".format(bet.stake * bet.odd)}",
                             isBold = true
                         )
-
                         Spacer(modifier = Modifier.height(16.dp))
-
-                        // Badge de Estado dinámico
                         StatusBadge(bet.status.toString())
                     }
                 }

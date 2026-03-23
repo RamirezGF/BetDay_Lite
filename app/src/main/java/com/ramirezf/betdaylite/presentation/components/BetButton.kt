@@ -31,9 +31,9 @@ fun BetButton(
     onClick: () -> Unit
 ) {
     val gradientColors = when {
-        isSelected -> listOf(Color(0xFFEB1D26), Color(0xFF911118))
-        !enabled -> listOf(Color(0xFF424242), Color(0xFF757575))
-        else -> listOf(Color(0xFFEB1D26), Color(0xFF000000))
+        isSelected -> listOf(Color(0xFF00E676), Color(0xFF1B5E20))
+        !enabled -> listOf(Color(0xFF212121), Color(0xFF424242))
+        else -> listOf(Color(0xFF2E7D32), Color(0xFF0A0A0A))
     }
     Box(
         modifier = modifier
@@ -42,9 +42,9 @@ fun BetButton(
                 brush = Brush.verticalGradient(gradientColors),
                 shape = CircleShape
             )
-            .border(width = 1.dp, color = Color(0xFF0B3B82), shape = CircleShape)
+            .border(width = 1.dp, color = Color(0xFF43A047), shape = CircleShape)
             .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 8.dp),
+            .padding(horizontal = 6.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(

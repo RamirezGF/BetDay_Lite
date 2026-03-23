@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -73,8 +74,11 @@ fun MatchCard(
             Spacer(modifier = Modifier.height(12.dp))
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                modifier = Modifier.fillMaxWidth()
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
             ) {
                 listOf(
                     "1" to match.market.odds.home to Pick.HOME,
@@ -87,7 +91,7 @@ fun MatchCard(
                         odds = odd.toString(),
                         enabled = !isAlreadyBet,
                         isSelected = isAlreadyBet && selectedPick == pickType,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.width(60.dp),
                         onClick = { onPick(pickType) }
                     )
                 }
